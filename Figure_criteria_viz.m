@@ -1,5 +1,5 @@
 %% from strehl_behavior...
-load('infocus_distribution_w_lims.mat');
+load('data/infocus_distribution_w_lims.mat');
 colordef;
 chosen_ab = abs(212);
 scherz_spher = chosen_ab;%abs(300);
@@ -14,13 +14,15 @@ min_p4 = pi4_calculator(chosen_ab,imdim,simdim);
 indiv_p4 = indiv_p4_calculator(chosen_ab,imdim,simdim);
 
 %% spherical only...
+spher_domain = [-2 2];
 plot_phase_shift(scherz_spher,imdim,simdim/2,0:60,[1,5]);
-plot_probe_comparison(scherz_spher,imdim,simdim,pi4_calculator(scherz_spher,imdim,simdim));
+plot_probe_comparison(scherz_spher,imdim,simdim,pi4_calculator(scherz_spher,imdim,simdim),spher_domain);
 %% complex
 plot_phase_shift(chosen_ab,imdim,simdim,0:200,[2,3,5,11]);
-plot_probe_comparison(chosen_ab,imdim,simdim,min_p4);
-plot_probe_comparison(chosen_ab,imdim,simdim,indiv_p4);
-plot_probe_comparison(chosen_ab,imdim,simdim,S);
+complex_domain = [-1 1];
+plot_probe_comparison(chosen_ab,imdim,simdim,min_p4,complex_domain);
+plot_probe_comparison(chosen_ab,imdim,simdim,indiv_p4,complex_domain);
+plot_probe_comparison(chosen_ab,imdim,simdim,S,complex_domain);
 
 %% specific probe sizes
 ps_s = probe_sizer(chosen_ab,imdim*4,simdim*4,[min_p4,indiv_p4,S]);

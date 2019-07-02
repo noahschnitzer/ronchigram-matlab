@@ -1,4 +1,4 @@
-function plot_probe_comparison(ab,imdim,simdim,aperture_size);
+function plot_probe_comparison(ab,imdim,simdim,aperture_size,domain)
     z_ab = ab;
     z_ab.mag(:) = 0;
     [~,~,~,probe,~] = shifted_ronchigram(ab,[0 0], aperture_size, imdim, simdim);
@@ -13,7 +13,7 @@ function plot_probe_comparison(ab,imdim,simdim,aperture_size);
     area(-xd,yd,'LineWidth',2, 'FaceColor','red','FaceAlpha',.5);
     xlabel('Radius (Å)');
     ylabel('Normalized Intensity');
-    xlim([-2 2]);
+    xlim(domain);
     set(gca,'FontSize',20);
     set(gca,'FontName','Helvetica Neue');
 
