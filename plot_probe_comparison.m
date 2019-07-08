@@ -1,4 +1,4 @@
-function plot_probe_comparison(ab,imdim,simdim,aperture_size,domain)
+function plot_probe_comparison(fig,ab,imdim,simdim,aperture_size,domain,color_left,color_right,alpha)
     z_ab = ab;
     z_ab.mag(:) = 0;
     [~,~,~,probe,~] = shifted_ronchigram(ab,[0 0], aperture_size, imdim, simdim);
@@ -6,11 +6,11 @@ function plot_probe_comparison(ab,imdim,simdim,aperture_size,domain)
     %px_to_ang = lambda*1/(2*simdim/1000)*10^10; 
     xd = (0:imdim/2)*px_to_ang(simdim,300);
     yd = radial_average(probe)/(pi*(aperture_size*imdim/(2*simdim)).^2).^2;%normalize_data(radial_average(probe),'total');
-    figure; area(xd,yd,'LineWidth',2, 'FaceColor','blue','FaceAlpha',.5);
+    figure(fig); area(xd,yd,'LineWidth',2, 'FaceColor',color_right,'FaceAlpha',alpha);
     hold on;
     [~,~,~,probe,~] = shifted_ronchigram(z_ab,[0 0], aperture_size, imdim, simdim);
     yd = radial_average(probe)/(pi*(aperture_size*imdim/(2*simdim)).^2).^2;%normalize_data(radial_average(probe),'total');
-    area(-xd,yd,'LineWidth',2, 'FaceColor','red','FaceAlpha',.5);
+    area(-xd,yd,'LineWidth',2, 'FaceColor',color_left,'FaceAlpha',alpha);
     xlabel('Radius (Å)');
     ylabel('Normalized Intensity');
     xlim(domain);
