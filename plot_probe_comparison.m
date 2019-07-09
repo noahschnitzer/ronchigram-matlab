@@ -11,7 +11,7 @@ function plot_probe_comparison(fig,ab,imdim,simdim,aperture_size,domain,color_le
     [~,~,~,probe,~] = shifted_ronchigram(z_ab,[0 0], aperture_size, imdim, simdim);
     yd = radial_average(probe)/(pi*(aperture_size*imdim/(2*simdim)).^2).^2;%normalize_data(radial_average(probe),'total');
     area(-xd,yd,'LineWidth',2, 'FaceColor',color_left,'FaceAlpha',alpha);
-    xlabel('Radius (Å)');
+    xlabel(['Radius (' char(197) ')']);
     ylabel('Normalized Intensity');
     xlim(domain);
     set(gca,'FontSize',20);

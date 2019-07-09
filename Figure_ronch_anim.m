@@ -34,3 +34,18 @@ for ab = anim_abs
    writeVideo(v,ronch_im);
 end
 close(v);
+%%
+v = VideoWriter('output/abtable_out.avi');
+v.FrameRate = 1;
+open(v);
+for ab = anim_abs
+    close all;
+    includes = ab.mag~=0;
+    tabulate_abs(figure,ab,includes);
+   %ronch_im = shifted_ronchigram(ab,[0 0],aperture_size,imdim,simdim); 
+   %imagesc(ronch_im);axis image; colormap gray;
+   drawnow;
+   print('output/temp.png','-dpng');
+   writeVideo(v,imread('output/temp.png'));
+end
+close(v);
