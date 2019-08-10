@@ -26,7 +26,7 @@ function [ronch, chi0, min_p4, probe, S] = shifted_ronchigram(aberrations, shift
     % ronchigram
     ronch_t = zeros(size(al_pp));
     nsim = 1;
-    nnoise = 10;
+    nnoise = 1;
     noisefact = 16;
     for simnum = 1:nsim
         noise_kernel_size = imdim/noisefact; %256 ->32, 512 ~ 32, 1024 -> 128
@@ -41,8 +41,11 @@ function [ronch, chi0, min_p4, probe, S] = shifted_ronchigram(aberrations, shift
         noise_fn = noise_fn + 1;
         noise_fn = noise_fn./2;
         %figure; histogram(noise_fn(:));
-        noise_fun = imresize(noise_fn,resize_factor);
-
+        %for finite sized probe
+        %noise_fun = imfilter(imresize(noise_fn,resize_factor),fspecial('gaussian',[10 10],1));
+        
+        noise_fun = (imresize(noise_fn,resize_factor)); %for normal probe
+        
         %noise_fun = perlin_noise(imdim/noisefact,imdim/noisefact);
         %noise_fun = imresize(noise_fun,noisefact);
         %figure; imagesc(noise_fun);

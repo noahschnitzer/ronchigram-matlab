@@ -29,7 +29,7 @@ figure; imagesc(ronch); title('multi'); colormap gray;
 
 %%
 idx = 100;%100,176,
-im = shifted_ronchigram(abs(idx),[0 0], aperture_size,imdim,simdim);
+im = shifted_ronchigram(abs(idx),[0 0], 128,imdim,simdim);
 box_dim = 512;%round(sqrt((imdim/simdim*aperture_size)^2/2));
 crop_idx = imdim/2-box_dim/2 +1: imdim/2+ box_dim/2;
 im = im(crop_idx,crop_idx);

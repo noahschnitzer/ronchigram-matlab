@@ -36,8 +36,9 @@ all_probe_sizes = probe_sizer(chosen_ab,imdim*ps_simdim_f,simdim*ps_simdim_f,con
 %% probe size vs CA plot
 figure; 
 plot(conv_angles(:),2*px_to_ang(simdim*ps_simdim_f,300)*all_probe_sizes(:),'LineWidth',4,'Color','black');
-%line([S S],[px_to_ang*probe_sizes(idx,strehl_ap(idx)) px_to_ang*max(probe_sizes(idx,:))],'Color',c_strehl,'LineWidth',4);
-line([S,S],[0 100],'Color',c_strehl,'LineWidth',4);
+
+
+%line([S,S],[0 100],'Color',c_strehl,'LineWidth',4);
 line([min_p4,min_p4],[0 100],'Color',c_mw_p4,'LineWidth',4);
 line([indiv_p4,indiv_p4],[0 100],'Color',c_indiv_p4,'LineWidth',4);
 
@@ -45,14 +46,14 @@ xlim([3 70]);
 ylim([0 3]);
 xlabel('Convergence Angle (mrad)');
 ylabel(['Probe Size (' char(197) ')']);
-set(gca,'FontSize',20);
+set(gca,'FontSize',30);
 set(gca,'FontName','Helvetica Neue');
 %ylim([0 2*px_to_ang(simdim*ps_simdim_f,300)*all_probe_sizes(plot_domain(1))]);
 %% Probe sizes across apertures plots from metrics
 load('data/metrics_state.mat','reduced_min_probe_size_ap','reduced_strehl_ap_err','reduced_indiv_p4_ap_err','reduced_mw_p4_ap_err');
 % reduced probe sizes are radius'.. hence 2* factor for probe size err
 figure; hold on;
-min_ap = 5; % min 3
+min_ap = 10; % min 3
 max_ap = 70; % max 95
 %px_to_ang = 1;
 domain = find(reduced_min_probe_size_ap == min_ap):find(reduced_min_probe_size_ap == max_ap); %3,95
@@ -68,7 +69,7 @@ plot(nan,'Color',c_min,'LineWidth',4);
 xlabel('Convergence Angle (mrad)');
 ylabel(['Probe Size Error (' char(197) ')']);
 xlim([min_ap max_ap]);
-ylim([0 .4]);
+%ylim([0 .4]);
 set(gca,'FontSize',20);
 set(gca,'FontName','Helvetica Neue');
 
@@ -78,9 +79,18 @@ chi_map = calculate_aberration_function(chosen_ab,imdim,simdim);%shifted_ronchig
 inscribed = 256:256+512;
 %figure; imagesc(phase2color(chi_map(inscribed,inscribed))); axis image off;
 imwrite(phase2color(chi_map(inscribed,inscribed)),'output/phase_map.jpg');
+inf_mask = ones(imdim,imdim);
+inf_mask(~aperture_mask(imdim,simdim,31)) =-inf; 
+masked_map = inf_mask.*chi_map;%chi_map.*(1-aperture_mask(imdim,simdim,31));
+imwrite(phase2color(masked_map(inscribed,inscribed)),'output/phase_map_31.jpg');
+
+inf_mask = ones(imdim,imdim);
+inf_mask(~aperture_mask(imdim,simdim,64)) =-inf; 
+masked_map = inf_mask.*chi_map;%chi_map.*(1-aperture_mask(imdim,simdim,31));
+imwrite(phase2color(masked_map(inscribed,inscribed)),'output/phase_map_64.jpg');
 
 %% 3d probes
-[~, probe_lap] = calculate_probe(chi_map, imdim, simdim, 128,  [0 0]);
+[~, probe_lap] = calculate_probe(chi_map, imdim, simdim, 64,  [0 0]);
 [~, probe_sap] = calculate_probe(chi_map, imdim, simdim, 31,  [0 0]);
 extent = imdim/2-15:imdim/2+15;
 figure; surf(probe_lap(extent,extent),'FaceColor','interp'); axis off;

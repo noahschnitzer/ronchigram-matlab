@@ -6,7 +6,7 @@ function [results_strehl,results_pi4,results_indiv_p4] = aberration_series(ab, i
     
     %% 
     for jt = 1:length(dfs)
-        df = dfs(jt);
+        df = dfs(jt)
         %% calculations
         ab.mag(aberration_index) = df;
         ronch = shifted_ronchigram(ab, [0 0], aperture_size, imdim, simdim);

@@ -2,6 +2,7 @@
 clear; close all; clc;
 %%
 ab = aberration_generator(1);
+%%
 %ab.mag = zeros(size(ab.mag));
 aperture_size = 128;
 imdim = 1024;
@@ -31,7 +32,9 @@ figure; montage(under_fit_ell_exps);
 figure; montage(over_sram); 
 figure; montage(over_fit_ell_exps); 
 
-
+%%
+chi = get_ab_fun(under_xs,over_xs);
+figure; imagesc(chi);
 %% extracting abs
 good_segments = ones(n^2,1);
 for it = 1:n^2
@@ -42,6 +45,15 @@ end
 
 %% fns
 
+function chi = get_ab_fun(under_fits,over_fits,param)
+    for it = 1:8
+        for jt = 1:8
+            fit = under_fits(sub2ind([8 8],it,jt),:);
+            chi(it,jt) = fit(2)+fit(3);
+            
+        end
+    end
+end
 
 function [sram] = get_sram(ronch, n)
     ac_dim = size(ronch,1) / n;
@@ -112,6 +124,37 @@ function [xs, fit_contour,fit_ell_exps] = fit_sram(sram, idxs, clb,cub,doplot)
 end
 
 function [abs] = fit_aberrations(over_coefs, under_coefs,n)
+    %xdata: alpha, theta
+    %ydata: A,B,Cs
+    %soln: abs
+    
+    % assembling xdata
+    al_max = 180 * 10^-3; 
+    al_vec = (linspace(-al_max,al_max,n));
+    [alxx,alyy] = meshgrid(al_vec,al_vec);
+    alpha = sqrt(alxx.^2 + alyy.^2);
+    theta = atan2(alyy,alxx);
+    xdata = cat(2,alpha(:),theta(:));
+    ydata = cat(3,over_coefs,under_coefs);
+    
+    %ydata = over_coefs;%cat(3,over_coefs,under_coefs);
+    guess = zeros(2,12);
+    lb = ones(2,12).*-inf;
+    ub = ones(2,12).*inf;
+    
+    tol = 1e-16;
+    maxFunEvals = 1e6;
+    maxIter = 1e3;
+    opt = optimset('Display','Iter','TolFun',tol,'TolX',tol,'MaxFunEvals',maxFunEvals,'MaxIter',maxIter);
+    fun = @(param, indep) calc_coeffs(param, indep);
+    abs = lsqcurvefit(fun,guess,xdata,ydata,lb,ub,opt);
+    %abs_over = lsqcurvefit(fun,guess,xdata,over_coefs,lb,ub,opt);
+    %abs_under = lsqcurvefit(fun,guess,xdata,under_coefs,lb,ub,opt);
+    %abs = cat(3,abs_over,abs_under);
+end
+
+
+function [abs] = fit_aberrations_v1(over_coefs, under_coefs,n)
     %xdata: alpha, theta
     %ydata: A,B,Cs
     %soln: abs
