@@ -18,7 +18,7 @@ function [min_p4] = pi4_calculator(aberrations, imdim, simdim)
     
     numAb = length(aberrations.n);
     
-    kev = 300;
+    kev = 300;%300;
     lambda = 12.3986./sqrt((2*511.0+kev).*kev) * 10^-10; % E-wavelength in **meter**
     
     

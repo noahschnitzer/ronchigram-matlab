@@ -42,3 +42,6 @@ xlabel('Convergence Angle (mrad)');
 ylabel(['Probe Size (' char(197) ')']);
 set(gca,'FontSize',30);
 set(gca,'FontName','Helvetica Neue');
+%%
+hold on;
+plot(conv_angles(:),2*px_to_ang(simdim*ps_simdim_f,300)*aps_59(:),'LineWidth',4,'Color','red');

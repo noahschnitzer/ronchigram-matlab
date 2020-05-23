@@ -69,6 +69,7 @@ function res = eff_probe_size_resolution_test(probe)
     [x,y] = meshgrid(1:numPx, 1:numPx);
     cx = numPx/2+1; cy = cx;
     total_current = sum(probe(:));
+    thrsh = .41*total_current;
     
     r = 1:numPx/2+1;
     left = 1;
@@ -82,11 +83,11 @@ function res = eff_probe_size_resolution_test(probe)
         masked_probe2 = mask2.*probe;
         masked_int2 = sum(masked_probe2(:));
         %masked_int2 is wider, should always be larger
-        if masked_int1 <= 1/2*total_current && masked_int2 >= 1/2*total_current
+        if masked_int1 <= thrsh && masked_int2 >= thrsh
             res = r(mid+1);
             return 
         else
-            if masked_int1 > 1/2*total_current
+            if masked_int1 > thrsh
                 right = mid - 1;
             else 
                 left = mid + 1;

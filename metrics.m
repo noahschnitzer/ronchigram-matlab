@@ -193,3 +193,111 @@ indiv_p4_aggregate_err = mean(indiv_p4_ap_err(min_probe_size_ap>10 & min_probe_s
 true_avg_size = mean(min_probe_sizes)*px_to_ang*100;
 pct_improved = (net_aggregate_err-human_aggregate_err)/true_avg_size*100
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% stds... (REVISIONS)
+domain = min_probe_size_ap>-10 & min_probe_size_ap < 110;%min_probe_size_ap>10 & min_probe_size_ap < 70;
+N = sum(domain);
+% probe size
+net_ps_mean = mean(net_ap_err(domain)*px_to_ang*100)
+human_ps_mean = mean(human_ap_err(domain)*px_to_ang*100)
+human_serr = std(human_ap_err(domain)*px_to_ang*100)/sqrt(N)
+net_serr = std(net_ap_err(domain)*px_to_ang*100)/sqrt(N)
+% CA
+net_ca_err = net_ap(domain)-strehl_ap(domain);
+net_ca_rmse = sqrt(mean(net_ca_err.^2))
+net_ca_serr = std(net_ca_err)/sqrt(N)
+
+%% 
+%for ipsosd99:
+N = length(net_ap);
+net_ca_err = (net_ap-strehl_apertures)*aperture_size
+net_ca_rmse = sqrt(mean(net_ca_err.^2))
+net_ca_serr = std(net_ca_err)/sqrt(N)
+
+%% histograms in probe size
+limx = [0,700];
+bedges = 0:10:700;
+figure;
+subplot(4,1,1);
+histogram(indiv_p4_ap_err*px_to_ang*100,bedges);
+xlim(limx);
+set(gca,'YScale','log')
+
+subplot(4,1,2);
+histogram(mw_p4_ap_err*px_to_ang*100,bedges);
+xlim(limx);
+set(gca,'YScale','log')
+
+subplot(4,1,3);
+histogram(net_ap_err*px_to_ang*100,bedges);
+xlim(limx);
+set(gca,'YScale','log')
+
+subplot(4,1,4);
+histogram(human_ap_err*px_to_ang*100,bedges);
+xlim(limx);
+set(gca,'YScale','log')
+%% histograms in CA
+%min_probe_size_ap is median ap for min probe size
+%min_probe_size_aps is all cas for min probe size
+
+%%
+figure;
+subplot(4,1,1);
+bedges = -10:1:10;
+pss = cat(1,strehl_ap_err, mw_p4_ap_err,indiv_p4_ap_err,min_probe_sizes',net_ap_err,human_ap_err);
+pss([1,2,3,5,6],:) = pss([1,2,3,5,6],:) + pss(4,:); 
+pss = pss*px_to_ang*100;
+cas = cat(1,strehl_ap,mw_p4_ap,indiv_p4_ap,min_probe_size_ap,net_ap,human_ap1);
+ca_errs = zeros(size(cas));
+for jt = 1:size(cas,1)
+    for it = 1:size(cas,2)
+        aps = min_probe_size_aps(it);
+        aps = aps{:};
+        if cas(jt,it) > max(aps)
+            ca_errs(jt,it) = cas(jt,it)-max(aps);
+        elseif cas(jt,it) < min(aps)
+            ca_errs(jt,it) = cas(jt,it)-min(aps);
+        else
+            ca_errs(jt,it) = 0;
+        end
+    end
+end
+
+subplot(3,1,1);histogram(ca_errs(1,domain),bedges,'FaceColor',c_strehl); ylim([0,664]);
+ylabel('Count');
+subplot(3,1,2);histogram(ca_errs(2,domain),bedges,'FaceColor',c_mw_p4);ylim([0,664]);
+ylabel('Count');
+subplot(3,1,3);histogram(ca_errs(3,domain),bedges,'FaceColor',c_indiv_p4);ylim([0,664]);
+%subplot(5,1,4);histogram(ca_errs(5,domain),bedges,'FaceColor',c_net);ylim([0,664]);
+xlabel('Convergence Angle');
+ylabel('Count');
+
+%% scatters CA vs CA
+domain = min_probe_size_ap>10 & min_probe_size_ap < 70;%min_probe_size_ap>10 & min_probe_size_ap < 70;
+s = 15;
+figure;
+scatter(cas(4,domain),cas(1,domain),s,c_strehl,'filled');
+hold on;
+scatter(cas(4,domain),cas(2,domain),s,c_mw_p4,'filled');
+scatter(cas(4,domain),cas(3,domain),s,c_indiv_p4,'filled');
+%scatter(cas(4,domain),cas(4,domain),s,'black','filled');
+%scatter(cas(4,domain),cas(5,domain),s,c_net,'filled');
+line([10,70],[10,70],'Color','black','LineWidth',2,'LineStyle','-');
+%xlim([10,70]);
+xlabel('Minimum Probe Size Convergence Angle (mrad)');
+ylabel('Heuristic Convergence Angle (mrad)');
+set(gca,'FontSize',14);
+axis equal;
+xlim([10,70]);
+ylim([10,70]);
+%% scatters PS vs CA
+domain = min_probe_size_ap>10 & min_probe_size_ap < 70;%min_probe_size_ap>10 & min_probe_size_ap < 70;
+s = 15;
+figure;
+scatter(cas(4,domain),pss(1,domain),s,c_strehl,'filled');
+hold on;
+scatter(cas(4,domain),pss(2,domain),s,c_mw_p4,'filled');
+scatter(cas(4,domain),pss(3,domain),s,c_indiv_p4,'filled');
+%scatter(cas(4,domain),pss(4,domain),s,'black','filled');
+%scatter(cas(4,domain),pss(5,domain),s,c_net,'filled');
