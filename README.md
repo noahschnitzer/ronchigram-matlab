@@ -34,6 +34,7 @@ To get started, check out `misc/example.m`
 	- `normalize_data.m`: Normalizes data to min 0 max 1
 	- `px_to_ang.m `: Calculates the scale factor Å/px for a given accelerating voltage and simulation dimension
 	- `radial_average.m`: Calculates a radial average
+	- `ronchi_game.m`: GUI Application for human aperture selection. Requires a file `ab_set.mat` in the working directory with a variable abs with containing any number of aberrations. User selections will be saved in `game_res_1.mat` file in the working directory
 - `simulation`: functions for STEM probe and Ronchigram simulation
 	- `aberration_generator.m`: Generates aberrations with random magnitude and angle out to 5th order. Relative scale of magnitudes is based off observations from AC-STEM, Kirkland 2011 Ultramicrosc.
 	- `aperture_mask.m`: Generates a binary disc of given radius
