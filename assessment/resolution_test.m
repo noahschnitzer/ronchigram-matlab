@@ -60,8 +60,6 @@ function res = probe_size_resolution_test(probe)
     end
 end
 
-% using a binary search (thx eecs 280) over discrete probe size vector to more efficiently
-% find cutoff probe size
 % based off https://www.mathworks.com/matlabcentral/fileexchange/56271-binarysearch-a-n-num
 % now considering mid, mid+1, looking to see one on either side of 0.5 int.
 function res = eff_probe_size_resolution_test(probe)
@@ -69,6 +67,7 @@ function res = eff_probe_size_resolution_test(probe)
     [x,y] = meshgrid(1:numPx, 1:numPx);
     cx = numPx/2+1; cy = cx;
     total_current = sum(probe(:));
+    thrsh = .41*total_current;
     
     r = 1:numPx/2+1;
     left = 1;
@@ -82,11 +81,11 @@ function res = eff_probe_size_resolution_test(probe)
         masked_probe2 = mask2.*probe;
         masked_int2 = sum(masked_probe2(:));
         %masked_int2 is wider, should always be larger
-        if masked_int1 <= 1/2*total_current && masked_int2 >= 1/2*total_current
+        if masked_int1 <= thrsh && masked_int2 >= thrsh
             res = r(mid+1);
             return 
         else
-            if masked_int1 > 1/2*total_current
+            if masked_int1 > thrsh
                 right = mid - 1;
             else 
                 left = mid + 1;

@@ -4,7 +4,6 @@
 %%% By Suk Hyun Sung
 %%% revised by noah schnitzer
 %%%
-%%% Parameters:
 
 function [ronch, chi0, min_p4, probe, S] = shifted_ronchigram(aberrations, shifts, aperture_size, imdim, simdim)
     kev = 300;
@@ -33,23 +32,14 @@ function [ronch, chi0, min_p4, probe, S] = shifted_ronchigram(aberrations, shift
         resize_factor = imdim./noise_kernel_size;
 
 
-        noise_fn = zeros(noise_kernel_size,noise_kernel_size);%randn(noise_kernel_size,noise_kernel_size);
+        noise_fn = zeros(noise_kernel_size,noise_kernel_size);
         for it = 1:nnoise
            noise_fn = noise_fn + randn(noise_kernel_size,noise_kernel_size);
         end
         noise_fn = noise_fn./nnoise;
         noise_fn = noise_fn + 1;
         noise_fn = noise_fn./2;
-        %figure; histogram(noise_fn(:));
-        %for finite sized probe
-        %noise_fun = imfilter(imresize(noise_fn,resize_factor),fspecial('gaussian',[10 10],1));
-        
         noise_fun = (imresize(noise_fn,resize_factor)); %for normal probe
-        
-        %noise_fun = perlin_noise(imdim/noisefact,imdim/noisefact);
-        %noise_fun = imresize(noise_fun,noisefact);
-        %figure; imagesc(noise_fun);
-
         charge_e = 1.602e-19;
         mass_e = 9.11e-31;
         c = 3e8;

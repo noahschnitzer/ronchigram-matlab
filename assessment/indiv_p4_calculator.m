@@ -26,6 +26,7 @@ function [global_min_indiv_p4] = indiv_p4_calculator(aberrations, imdim, simdim)
        min_indiv_p4 = min(al_rr_p4(:))*1000;
        if min_indiv_p4 < global_min_indiv_p4
           global_min_indiv_p4 = min_indiv_p4;
+          %kt
           %figure; plot(al_rr_p4);
        end
        %imagesc(chi0_p4);

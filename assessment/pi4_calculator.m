@@ -56,8 +56,6 @@ function [min_p4] = pi4_calculator(aberrations, imdim, simdim)
             max_p4 = min_p4;
         end
     end
-    %figure;plot(chi0(floor(numPx/2),:));
-    %figure;imagesc(abs(chi0));
     
     min_p4 = max_p4;
 
