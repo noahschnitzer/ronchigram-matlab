@@ -5,6 +5,7 @@ horz_dim = 700;
 
 it = 0;
 user_sel = [];
+mode = '';
 
 if nargin == 1
     abers = varargin{1};
@@ -13,6 +14,11 @@ elseif nargin == 2
     abers = varargin{1};
     cnn   = varargin{2};
     numMetric = 5;
+elseif nargin == 3
+    abers = varargin{1};
+    cnn = varargin{2};
+    numMetric = 5;
+    mode = varargin{3};
 end
     
 
@@ -123,7 +129,11 @@ circlesInit();
 
     function interaction()
         shifts = [0 0];
-        [im,~,minp4,~] = shifted_ronchigram(abers(perms(it)),shifts,aperture_size,imdim,simdim);
+        if strcmp(mode,'legacy')
+            [im,~,minp4,~] = shifted_ronchigram_o(abers(perms(it)),shifts,aperture_size,imdim,simdim);
+        else
+            [im,~,minp4,~] = shifted_ronchigram(abers(perms(it)),shifts,aperture_size,imdim,simdim);
+        end
         radii(3) = minp4;
         fig.im.CData = im;
         fig.title.String=(sprintf('%d / %d',it, numAbs));
