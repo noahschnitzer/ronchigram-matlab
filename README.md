@@ -1,6 +1,8 @@
 # ronchigram-matlab
 By Noah Schnitzer, Suk Hyun Sung @ [Hovden Lab](http://hovdenlab.com/)
 
+Code accompanying our paper: [Schnitzer, N., Sung, S. H., & Hovden, R. (2020). Optimal STEM Convergence Angle Selection Using a Convolutional Neural Network and the Strehl Ratio. Microscopy and Microanalysis, 26(5), 921-928](https://doi.org/10.1017/S1431927620001841).
+
 A MATLAB library for quick simulation of the STEM probe and electron Ronchigram, and training of a CNN to assess probe quality from the Ronchigram.
 
 See also: http://ronchigram.com/ ([source](https://github.com/sukhsung/ronchigram/)) for a similar JS/Wasm project.
@@ -28,6 +30,7 @@ To get started, check out `misc/example.m`
 	- `defocus_distribution.m`: More slowly generates a dataset with ~ uniform distribution of convergence angles and defocus set to compensate other aberrations.
 	- `distribution_generator.m`: Subroutine to generate aberrations and dynamically scale to try to get uniform CA distribtion.
 - `misc`: miscellaneous scripts and functions, e.g. utilities and examples
+	- `ab_set.mat`: Test set of in-focus randomly generated aberrations with a broad range of optimal convergence angles. Read by `ronchi_game.m`, used for testing network and human performance in paper.
 	- `colordef.m`: Colors from paper
 	- `example.m`: Brief walkthrough for Ronchigram simulation and heuristic calculation
 	- `get_aberration.m`: Calculates the phase shift for a specific aberration
